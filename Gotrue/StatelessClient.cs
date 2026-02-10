@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json;
 using Supabase.Gotrue.Exceptions;
 using Supabase.Gotrue.Interfaces;
 using Supabase.Gotrue.Mfa;
@@ -116,7 +116,7 @@ namespace Supabase.Gotrue
 					nextLevel = AuthenticatorAssuranceLevel.aal2;
 				}
 
-				var currentAuthenticationMethods = payload.Amr.Select(x => JsonConvert.DeserializeObject<AmrEntry>(x));
+				var currentAuthenticationMethods = payload.Amr.Select(x => JsonSerializer.Deserialize<AmrEntry>(x, SourceGenerationContext.Instance.AmrEntry));
 
 				var response = new MfaGetAuthenticatorAssuranceLevelResponse
 				{
@@ -133,10 +133,10 @@ namespace Supabase.Gotrue
 
 		/// <inheritdoc />
 		public IGotrueApi<User, Session> GetApi(StatelessClientOptions options) => new Api(options.Url, options.Headers);
-		
+
 		/// <inheritdoc />
 		public Task<Session?> SignUp(string email, string password, StatelessClientOptions options, SignUpOptions? signUpOptions = null) => SignUp(SignUpType.Email, email, password, options, signUpOptions);
-		
+
 		/// <inheritdoc />
 		public async Task<Session?> SignUp(SignUpType type, string identifier, string password, StatelessClientOptions options, SignUpOptions? signUpOptions = null)
 		{
@@ -155,20 +155,20 @@ namespace Supabase.Gotrue
 
 			return null;
 		}
-		
+
 		/// <inheritdoc />
 		public async Task<bool> SignIn(string email, StatelessClientOptions options, SignInOptions? signInOptions = null)
 		{
 			await GetApi(options).SendMagicLinkEmail(email, signInOptions);
 			return true;
 		}
-		
+
 		/// <inheritdoc />
 		public Task<bool> SendMagicLink(string email, StatelessClientOptions options, SignInOptions? signInOptions = null) => SignIn(email, options, signInOptions);
-		
+
 		/// <inheritdoc />
 		public Task<Session?> SignIn(string email, string password, StatelessClientOptions options) => SignIn(SignInType.Email, email, password, options);
-		
+
 		/// <inheritdoc />
 		public async Task<Session?> SignIn(SignInType type, string identifierOrToken, string? password = null, StatelessClientOptions? options = null)
 		{
@@ -209,7 +209,7 @@ namespace Supabase.Gotrue
 			result.ResponseMessage?.EnsureSuccessStatusCode();
 			return true;
 		}
-		
+
 		/// <inheritdoc />
 		public async Task<Session?> VerifyOTP(string phone, string otpToken, StatelessClientOptions options, MobileOtpType type = MobileOtpType.SMS)
 		{
@@ -372,7 +372,7 @@ namespace Supabase.Gotrue
 		}
 
 		/// <inheritdoc />
-		public async Task<Session?> RefreshToken(string accessToken, string refreshToken, StatelessClientOptions options) => 
+		public async Task<Session?> RefreshToken(string accessToken, string refreshToken, StatelessClientOptions options) =>
 			await GetApi(options).RefreshAccessToken(accessToken, refreshToken);
 
 		/// <summary>

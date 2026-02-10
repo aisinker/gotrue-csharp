@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Supabase.Core.Attributes;
 
 namespace Supabase.Gotrue
@@ -45,39 +45,44 @@ namespace Supabase.Gotrue
 			[MapTo("email_change_new")]
 			EmailChangeNew
 		}
-		
+
 		/// <summary>
 		/// The type of link being generated
 		/// </summary>
-		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("type")]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public string Type { get; }
-		
+
 		/// <summary>
 		/// The User's Email
 		/// </summary>
-		[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("email")]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public string Email { get; }
-		
+
 		/// <summary>
 		/// Only required if generating a signup link.
 		/// </summary>
-		[JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("password")]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public string? Password { get; set; }
-		
+
 		/// <summary>
 		/// The user's new email. Only required if type is 'email_change_current' or 'email_change_new'.
 		/// </summary>
-		[JsonProperty("new_email", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("new_email")]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public string? NewEmail { get; set; }
-		
+
 		/// <summary>
 		/// A custom data object to store the user's metadata. This maps to the `auth.users.user_metadata` column.
 		///
 		/// The `data` should be a JSON encodable object that includes user-specific info, such as their first and last name.
 		/// </summary>
-		[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonPropertyName("data")]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		public Dictionary<string, object>? Data { get; set; }
-		
+
 		/// <summary>
 		/// The URL which will be appended to the email link generated.
 		/// </summary>
@@ -118,11 +123,11 @@ namespace Supabase.Gotrue
 			Password = password;
 		}
 	}
-	
+
 	/// <summary>
 	/// Shortcut options for <see cref="GenerateLinkOptions.LinkType.EmailChangeCurrent"/>
 	/// </summary>
-	public class GenerateLinkEmailChangeCurrentOptions: GenerateLinkOptions
+	public class GenerateLinkEmailChangeCurrentOptions : GenerateLinkOptions
 	{
 		/// <summary>
 		/// Constructs options for <see cref="GenerateLinkOptions.LinkType.EmailChangeCurrent"/>
@@ -134,11 +139,11 @@ namespace Supabase.Gotrue
 			NewEmail = newEmail;
 		}
 	}
-	
+
 	/// <summary>
 	/// Shortcut options for <see cref="GenerateLinkOptions.LinkType.EmailChangeNew"/>
 	/// </summary>
-	public class GenerateLinkEmailChangeNewOptions: GenerateLinkOptions
+	public class GenerateLinkEmailChangeNewOptions : GenerateLinkOptions
 	{
 		/// <summary>
 		/// Constructs options for <see cref="GenerateLinkOptions.LinkType.EmailChangeNew"/>

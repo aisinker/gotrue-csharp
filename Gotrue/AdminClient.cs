@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Supabase.Gotrue.Interfaces;
 using Supabase.Gotrue.Mfa;
 using Supabase.Gotrue.Responses;
@@ -104,14 +104,14 @@ namespace Supabase.Gotrue
 		/// <inheritdoc />
 		public async Task<GenerateLinkResponse?> GenerateLink(GenerateLinkOptions options)
 		{
-			 var response = await _api.GenerateLink(_serviceKey, options);
-			 response.ResponseMessage?.EnsureSuccessStatusCode();
+			var response = await _api.GenerateLink(_serviceKey, options);
+			response.ResponseMessage?.EnsureSuccessStatusCode();
 
-			 if (response.Content is null)
-				 return null;
-			 
-			 var result = JsonConvert.DeserializeObject<GenerateLinkResponse>(response.Content);
-			 return result;
+			if (response.Content is null)
+				return null;
+
+			var result = JsonSerializer.Deserialize<GenerateLinkResponse>(response.Content, SourceGenerationContext.Instance.GenerateLinkResponse);
+			return result;
 		}
 
 		/// <inheritdoc />
@@ -123,7 +123,7 @@ namespace Supabase.Gotrue
 			if (response.Content is null)
 				return null;
 
-			var result = JsonConvert.DeserializeObject<List<Factor>>(response.Content);
+			var result = JsonSerializer.Deserialize<List<Factor>>(response.Content, SourceGenerationContext.Instance.ListFactor);
 			var listFactorsResponse = new MfaAdminListFactorsResponse
 			{
 				Factors = result

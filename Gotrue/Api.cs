@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json;
 using Supabase.Core;
 using Supabase.Core.Attributes;
 using Supabase.Core.Extensions;
@@ -86,14 +86,14 @@ namespace Supabase.Gotrue
 			if (!string.IsNullOrEmpty(response.Content))
 			{
 				// Gotrue returns a Session object for an auto-/pre-confirmed account
-				var session = JsonConvert.DeserializeObject<Session>(response.Content!);
+				var session = JsonSerializer.Deserialize<Session>(response.Content!, SourceGenerationContext.Instance.Session);
 
 				// If account is unconfirmed, Gotrue returned the user object, so fill User data
 				// in from the parsed response.
 				if (session is { User: null })
 				{
 					// Gotrue returns a User object for an unconfirmed account
-					session.User = JsonConvert.DeserializeObject<User>(response.Content!);
+					session.User = JsonSerializer.Deserialize<User>(response.Content!, SourceGenerationContext.Instance.User);
 				}
 
 				return session;
@@ -255,10 +255,10 @@ namespace Supabase.Gotrue
 
 		private Task<SSOResponse?> SignInWithSsoInternal(Guid? providerId = null, string? domain = null, SignInWithSSOOptions? options = null)
 		{
-			if(providerId != null && domain != null)
+			if (providerId != null && domain != null)
 				throw new GotrueException($"Both providerId and domain were provided to the API, " +
 				                          $"you must supply either one or the other but not both providerId={providerId}, domain={domain}");
-			if(providerId == null && domain == null)
+			if (providerId == null && domain == null)
 				throw new GotrueException($"Both providerId and domain were null " +
 				                          $"you must supply either one or the other but not both providerId={providerId}, domain={domain}");
 
@@ -273,7 +273,7 @@ namespace Supabase.Gotrue
 
 			var body = new Dictionary<string, object?>
 			{
-				{  providerId != null ? "provider_id" : "domain",  providerId != null ? providerId.ToString() : domain},
+				{ providerId != null ? "provider_id" : "domain", providerId != null ? providerId.ToString() : domain },
 				{ "redirect_to", options?.RedirectTo },
 
 				// this is important, it will not auto redirect the request and instead return the Uri needed to handle the login

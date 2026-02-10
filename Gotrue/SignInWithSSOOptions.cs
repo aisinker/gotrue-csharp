@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Supabase.Gotrue
 {
@@ -10,7 +10,7 @@ namespace Supabase.Gotrue
 		/// <summary>
 		/// Verification token received when the user completes the captcha on the site.
 		/// </summary>
-		[JsonProperty("captchaToken")]
+		[JsonPropertyName("captchaToken")]
 		public string? CaptchaToken { get; set; }
 	}
 }

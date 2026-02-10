@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 #pragma warning disable CS1591
 
 namespace Supabase.Gotrue
@@ -9,26 +9,26 @@ namespace Supabase.Gotrue
 	/// </summary>
 	public class Settings
 	{
-		[JsonProperty("disable_signup")]
+		[JsonPropertyName("disable_signup")]
 		public bool? DisableSignup { get; set; }
 
-		[JsonProperty("mailer_autoconfirm")]
+		[JsonPropertyName("mailer_autoconfirm")]
 		public bool? MailerAutoConfirm { get; set; }
 
-		[JsonProperty("phone_autoconfirm")]
+		[JsonPropertyName("phone_autoconfirm")]
 		public bool? PhoneAutoConfirm { get; set; }
 
-		[JsonProperty("sms_provider")]
+		[JsonPropertyName("sms_provider")]
 		public string? SmsProvider { get; set; }
 
-		[JsonProperty("mfa_enabled")]
+		[JsonPropertyName("mfa_enabled")]
 		public bool? MFAEnabled { get; set; }
 
 		// SAML = SSO enabled
-		[JsonProperty("saml_enabled")]
+		[JsonPropertyName("saml_enabled")]
 		public bool? SAMLEnabled { get; set; }
 
-		[JsonProperty("external")]
+		[JsonPropertyName("external")]
 		public Dictionary<string, bool>? ExternalProviders { get; set; }
 	}
 }

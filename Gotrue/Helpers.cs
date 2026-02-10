@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json;
 using Supabase.Core.Attributes;
 using Supabase.Core.Extensions;
 using Supabase.Gotrue.Exceptions;
 using Supabase.Gotrue.Responses;
+
 namespace Supabase.Gotrue
 {
 	/// <summary>
@@ -160,7 +161,7 @@ namespace Supabase.Gotrue
 			where T : class
 		{
 			var baseResponse = await MakeRequest(method, url, data, headers);
-			return baseResponse.Content != null ? JsonConvert.DeserializeObject<T>(baseResponse.Content) : default;
+			return baseResponse.Content != null ? (T?)JsonSerializer.Deserialize(baseResponse.Content, typeof(T), SourceGenerationContext.Instance) : default;
 		}
 
 		/// <summary>
@@ -192,7 +193,7 @@ namespace Supabase.Gotrue
 			using var requestMessage = new HttpRequestMessage(method, builder.Uri);
 			if (data != null && method != HttpMethod.Get)
 			{
-				requestMessage.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+				requestMessage.Content = new StringContent(JsonSerializer.Serialize(data, data.GetType(), SourceGenerationContext.Instance), Encoding.UTF8, "application/json");
 			}
 
 			if (headers != null)

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using static Supabase.Gotrue.Constants;
 
 namespace Supabase.Gotrue
@@ -14,13 +14,13 @@ namespace Supabase.Gotrue
 		///
 		/// The `data` should be a JSON serializable object that includes user-specific info, such as their first and last name.
 		/// </summary>
-		[JsonProperty("data")]
+		[JsonPropertyName("data")]
 		public Dictionary<string, object>? Data { get; set; }
 
 		/// <summary>
 		/// Verification token received when the user completes the captcha on the site.
 		/// </summary>
-		[JsonProperty("captchaToken")]
+		[JsonPropertyName("captchaToken")]
 		public string? CaptchaToken { get; set; }
 	}
 }

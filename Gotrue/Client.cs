@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json;
 using Supabase.Gotrue.Exceptions;
 using Supabase.Gotrue.Interfaces;
 using Supabase.Gotrue.Mfa;
@@ -518,11 +518,11 @@ namespace Supabase.Gotrue
 				NotifyAuthStateChange(SignedIn);
 				return CurrentSession;
 			}
-			
+
 			var iat = payload.IssuedAt;
 			var exp = payload.ValidTo;
 			var expiresIn = (long)(exp - iat).TotalSeconds;
-			
+
 			CurrentSession = new Session
 			{
 				AccessToken = accessToken,
@@ -616,7 +616,7 @@ namespace Supabase.Gotrue
 				catch (Exception e)
 				{
 					_debugNotification?.Log($"Failed to refresh token ({e.Message})", e);
-					_debugNotification?.Log(JsonConvert.SerializeObject(CurrentSession, Formatting.Indented));
+					_debugNotification?.Log(JsonSerializer.Serialize<Session>(CurrentSession, SourceGenerationContext.Instance.Session));
 					DestroySession();
 					return null;
 				}
@@ -689,7 +689,7 @@ namespace Supabase.Gotrue
 		{
 			if (!Online)
 				throw new GotrueException("Only supported when online", Offline);
-			
+
 			if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
 				throw new GotrueException("No token provided", NoSessionFound);
 
@@ -699,9 +699,9 @@ namespace Supabase.Gotrue
 
 				if (result == null || string.IsNullOrEmpty(result.AccessToken))
 					throw new GotrueException("Could not refresh token from provided session.", NoSessionFound);
-				
+
 				CurrentSession = result;
-				NotifyAuthStateChange(TokenRefreshed);	
+				NotifyAuthStateChange(TokenRefreshed);
 			}
 			catch (GotrueException ex) when (ex.Reason is InvalidRefreshToken)
 			{
@@ -728,7 +728,7 @@ namespace Supabase.Gotrue
 
 				CurrentSession = result;
 
-				NotifyAuthStateChange(TokenRefreshed);	
+				NotifyAuthStateChange(TokenRefreshed);
 			}
 			catch (GotrueException ex) when (ex.Reason is InvalidRefreshToken)
 			{
@@ -800,11 +800,11 @@ namespace Supabase.Gotrue
 			if (!Online)
 				throw new GotrueException("Only supported when online", Offline);
 
-			var result =  await _api.Verify(CurrentSession.AccessToken, mfaVerifyParams);
+			var result = await _api.Verify(CurrentSession.AccessToken, mfaVerifyParams);
 
 			if (result == null || string.IsNullOrEmpty(result.AccessToken))
 				throw new GotrueException("Could not verify MFA.", MfaChallengeUnverified);
-			
+
 			var session = new Session
 			{
 				AccessToken = result.AccessToken,
@@ -839,7 +839,7 @@ namespace Supabase.Gotrue
 				return null;
 			}
 
-			var result =  await _api.Verify(CurrentSession.AccessToken, new MfaVerifyParams
+			var result = await _api.Verify(CurrentSession.AccessToken, new MfaVerifyParams
 			{
 				FactorId = mfaChallengeAndVerifyParams.FactorId,
 				Code = mfaChallengeAndVerifyParams.Code,
@@ -848,7 +848,7 @@ namespace Supabase.Gotrue
 
 			if (result == null || string.IsNullOrEmpty(result.AccessToken))
 				throw new GotrueException("Could not verify MFA.", MfaChallengeUnverified);
-			
+
 			var session = new Session
 			{
 				AccessToken = result.AccessToken,
@@ -873,7 +873,7 @@ namespace Supabase.Gotrue
 			if (!Online)
 				throw new GotrueException("Only supported when online", Offline);
 
-			return  await _api.Unenroll(CurrentSession.AccessToken, mfaUnenrollParams);
+			return await _api.Unenroll(CurrentSession.AccessToken, mfaUnenrollParams);
 		}
 
 		/// <inheritdoc />
@@ -916,7 +916,7 @@ namespace Supabase.Gotrue
 				nextLevel = AuthenticatorAssuranceLevel.aal2;
 			}
 
-			var currentAuthenticationMethods = payload.Amr.Select(x => JsonConvert.DeserializeObject<AmrEntry>(x));
+			var currentAuthenticationMethods = payload.Amr.Select(x => JsonSerializer.Deserialize<AmrEntry>(x, SourceGenerationContext.Instance.AmrEntry));
 
 			var response = new MfaGetAuthenticatorAssuranceLevelResponse
 			{

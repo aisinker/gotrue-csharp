@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Supabase.Gotrue.Mfa;
 
 #pragma warning disable CS1591
@@ -14,64 +14,64 @@ namespace Supabase.Gotrue
 	/// </summary>
 	public class User
 	{
-		[JsonProperty("app_metadata")]
+		[JsonPropertyName("app_metadata")]
 		public Dictionary<string, object> AppMetadata { get; set; } = new Dictionary<string, object>();
 
-		[JsonProperty("aud")]
+		[JsonPropertyName("aud")]
 		public string? Aud { get; set; }
 
-		[JsonProperty("confirmation_sent_at")]
+		[JsonPropertyName("confirmation_sent_at")]
 		public DateTime? ConfirmationSentAt { get; set; }
 
-		[JsonProperty("confirmed_at")]
+		[JsonPropertyName("confirmed_at")]
 		public DateTime? ConfirmedAt { get; set; }
 
-		[JsonProperty("created_at")]
+		[JsonPropertyName("created_at")]
 		public DateTime CreatedAt { get; set; }
 
-		[JsonProperty("email")]
+		[JsonPropertyName("email")]
 		public string? Email { get; set; }
 
-		[JsonProperty("email_confirmed_at")]
+		[JsonPropertyName("email_confirmed_at")]
 		public DateTime? EmailConfirmedAt { get; set; }
 
-		[JsonProperty("id")]
+		[JsonPropertyName("id")]
 		public string? Id { get; set; }
 
-		[JsonProperty("identities")]
+		[JsonPropertyName("identities")]
 		public List<UserIdentity> Identities { get; set; } = new List<UserIdentity>();
 
-		[JsonProperty("invited_at")]
+		[JsonPropertyName("invited_at")]
 		public DateTime? InvitedAt { get; set; }
 
-		[JsonProperty("last_sign_in_at")]
+		[JsonPropertyName("last_sign_in_at")]
 		public DateTime? LastSignInAt { get; set; }
 
-		[JsonProperty("phone")]
+		[JsonPropertyName("phone")]
 		public string? Phone { get; set; }
 
-		[JsonProperty("phone_confirmed_at")]
+		[JsonPropertyName("phone_confirmed_at")]
 		public DateTime? PhoneConfirmedAt { get; set; }
 
-		[JsonProperty("recovery_sent_at")]
+		[JsonPropertyName("recovery_sent_at")]
 		public DateTime? RecoverySentAt { get; set; }
 
-		[JsonProperty("role")]
+		[JsonPropertyName("role")]
 		public string? Role { get; set; }
 
-		[JsonProperty("updated_at")]
+		[JsonPropertyName("updated_at")]
 		public DateTime? UpdatedAt { get; set; }
 
-		[JsonProperty("banned_until")]
+		[JsonPropertyName("banned_until")]
 		public DateTime? BannedUntil { get; set; }
 
-		[JsonProperty("is_anonymous")]
+		[JsonPropertyName("is_anonymous")]
 		public bool IsAnonymous { get; set; }
 
-		[JsonProperty("factors")]
+		[JsonPropertyName("factors")]
 		public List<Factor> Factors { get; set; } = new List<Factor>();
 
-		[JsonProperty("user_metadata")]
+		[JsonPropertyName("user_metadata")]
 		public Dictionary<string, object> UserMetadata { get; set; } = new Dictionary<string, object>();
 	}
 
@@ -87,28 +87,28 @@ namespace Supabase.Gotrue
 		/// Note: GoTrue does not yest support creating a user with app metadata
 		///     (see: https://github.com/supabase/gotrue-js/blob/d7b334a4283027c65814aa81715ffead262f0bfa/test/GoTrueApi.test.ts#L45)
 		/// </summary>
-		[JsonProperty("app_metadata")]
+		[JsonPropertyName("app_metadata")]
 		public Dictionary<string, object> AppMetadata { get; set; } = new Dictionary<string, object>();
 
 		/// <summary>
 		/// A custom data object for user_metadata. Can be any JSON serializable data.
 		/// Only a service role can modify.
 		/// </summary>
-		[JsonProperty("user_metadata")]
+		[JsonPropertyName("user_metadata")]
 		public Dictionary<string, object> UserMetadata { get; set; } = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Sets if a user has confirmed their email address.
 		/// Only a service role can modify
 		/// </summary>
-		[JsonProperty("email_confirm")]
+		[JsonPropertyName("email_confirm")]
 		public bool? EmailConfirm { get; set; }
 
 		/// <summary>
 		/// Sets if a user has confirmed their phone number.
 		/// Only a service role can modify
 		/// </summary>
-		[JsonProperty("phone_confirm")]
+		[JsonPropertyName("phone_confirm")]
 		public bool? PhoneConfirm { get; set; }
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace Supabase.Gotrue
 		/// <para>Setting the ban duration to "none" lifts the ban on the user.</para>
 		/// <para>Only a service role can modify.</para>
 		/// </summary>
-		[JsonProperty("ban_duration")]
+		[JsonPropertyName("ban_duration")]
 		public string? BanDuration { get; set; }
 	}
 
@@ -130,25 +130,25 @@ namespace Supabase.Gotrue
 	/// </summary>
 	public class UserAttributes
 	{
-		[JsonProperty("email")]
+		[JsonPropertyName("email")]
 		public string? Email { get; set; }
 
-		[JsonProperty("email_change_token")]
+		[JsonPropertyName("email_change_token")]
 		public string? EmailChangeToken { get; set; }
 
-		[JsonProperty("nonce")]
+		[JsonPropertyName("nonce")]
 		public string? Nonce { get; set; }
 
-		[JsonProperty("password")]
+		[JsonPropertyName("password")]
 		public string? Password { get; set; }
 
-		[JsonProperty("phone")]
+		[JsonPropertyName("phone")]
 		public string? Phone { get; set; }
 
 		/// <summary>
 		/// A custom data object for user_metadata that a user can modify.Can be any JSON.
 		/// </summary>
-		[JsonProperty("data")]
+		[JsonPropertyName("data")]
 		public Dictionary<string, object> Data { get; set; } = new Dictionary<string, object>();
 	}
 
@@ -157,26 +157,26 @@ namespace Supabase.Gotrue
 	/// </summary>
 	public class VerifyOTPParams
 	{
-		[JsonProperty("email")]
+		[JsonPropertyName("email")]
 		public string? Email { get; set; }
 
-		[JsonProperty("phone")]
+		[JsonPropertyName("phone")]
 		public string? Phone { get; set; }
 
-		[JsonProperty("token")]
+		[JsonPropertyName("token")]
 		public string? Token { get; set; }
 
-		[JsonProperty("type")]
+		[JsonPropertyName("type")]
 		public string? Type { get; set; }
 	}
 
 	public class UserList<TUser>
 		where TUser : User
 	{
-		[JsonProperty("aud")]
+		[JsonPropertyName("aud")]
 		public string? Aud { get; set; }
 
-		[JsonProperty("users")]
+		[JsonPropertyName("users")]
 		public List<TUser> Users { get; set; } = new List<TUser>();
 	}
 
@@ -185,28 +185,28 @@ namespace Supabase.Gotrue
 	/// </summary>
 	public class UserIdentity
 	{
-		[JsonProperty("id")]
+		[JsonPropertyName("id")]
 		public string? Id { get; set; }
 
-		[JsonProperty("user_id")]
+		[JsonPropertyName("user_id")]
 		public string? UserId { get; set; }
 
-		[JsonProperty("identity_data")]
+		[JsonPropertyName("identity_data")]
 		public Dictionary<string, object> IdentityData { get; set; } = new Dictionary<string, object>();
 
-		[JsonProperty("identity_id")]
+		[JsonPropertyName("identity_id")]
 		public string IdentityId { get; set; } = null!;
 		
-		[JsonProperty("provider")]
+		[JsonPropertyName("provider")]
 		public string? Provider { get; set; }
 
-		[JsonProperty("created_at")]
+		[JsonPropertyName("created_at")]
 		public DateTime CreatedAt { get; set; }
 		
-		[JsonProperty("last_sign_in_at")]
+		[JsonPropertyName("last_sign_in_at")]
 		public DateTime LastSignInAt { get; set; }
 		
-		[JsonProperty("updated_at")]
+		[JsonPropertyName("updated_at")]
 		public DateTime? UpdatedAt { get; set; }
 	}
 }
