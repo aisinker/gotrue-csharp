@@ -25,7 +25,7 @@ namespace Supabase.Gotrue.Interfaces
 		Task<BaseResponse> SendMagicLinkEmail(string email, SignInOptions? options = null);
 		Task<BaseResponse> SendMobileOTP(string phone);
 		Task<TSession?> SignInWithIdToken(Provider provider, string idToken, string? accessToken = null, string? nonce = null, string? captchaToken = null);
-		Task<TSession?> SignInWithEmail(string email, string password);
+		Task<TSession?> SignInWithEmail(string email, string password, string? captchaToken = null);
 		Task<TSession?> SignInWithPhone(string phone, string password);
 		Task<PasswordlessSignInState> SignInWithOtp(SignInWithPasswordlessEmailOptions options);
 		Task<PasswordlessSignInState> SignInWithOtp(SignInWithPasswordlessPhoneOptions options);

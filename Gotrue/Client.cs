@@ -245,7 +245,7 @@ namespace Supabase.Gotrue
 
 		/// <inheritdoc />
 		public async Task<Session?> SignIn(SignInType type, string identifierOrToken, string? password = null,
-			string? scopes = null)
+			string? scopes = null, string? captchaToken = null)
 		{
 			if (!Online)
 				throw new GotrueException("Only supported when online", Offline);
@@ -254,7 +254,7 @@ namespace Supabase.Gotrue
 			switch (type)
 			{
 				case SignInType.Email:
-					newSession = await _api.SignInWithEmail(identifierOrToken, password!);
+					newSession = await _api.SignInWithEmail(identifierOrToken, password!, captchaToken);
 					UpdateSession(newSession);
 					break;
 				case SignInType.Phone:

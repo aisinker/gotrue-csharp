@@ -192,8 +192,9 @@ namespace Supabase.Gotrue
 
 			using var requestMessage = new HttpRequestMessage(method, builder.Uri);
 			if (data != null && method != HttpMethod.Get)
-			{
-				requestMessage.Content = new StringContent(JsonSerializer.Serialize(data, data.GetType(), SourceGenerationContext.Instance), Encoding.UTF8, "application/json");
+            {
+                var json = JsonSerializer.Serialize(data, data.GetType(), SourceGenerationContext.Instance);
+				requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
 			}
 
 			if (headers != null)

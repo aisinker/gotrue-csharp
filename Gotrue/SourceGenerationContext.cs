@@ -23,6 +23,7 @@ namespace Supabase.Gotrue
 	[JsonSerializable(typeof(SignInWithSSOOptions))]
 	[JsonSerializable(typeof(Settings))]
 	[JsonSerializable(typeof(AmrEntry))]
+    [JsonSerializable(typeof(UserAttributes))]
 	public partial class SourceGenerationContext : JsonSerializerContext
 	{
 		public static SourceGenerationContext Instance { get; } = new(new JsonSerializerOptions

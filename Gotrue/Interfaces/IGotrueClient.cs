@@ -164,15 +164,16 @@ namespace Supabase.Gotrue.Interfaces
 		/// <exception cref="GotrueException">Raised when token combination is invalid.</exception>
 		Task<TSession> SetSession(string accessToken, string refreshToken, bool forceAccessTokenRefresh = false);
 
-		/// <summary>
-		/// Log in an existing user, or login via a third-party provider.
-		/// </summary>
-		/// <param name="type">Type of Credentials being passed</param>
-		/// <param name="identifierOrToken">An email, phone, or RefreshToken</param>
-		/// <param name="password">Password to account (optional if `RefreshToken`)</param>
-		/// <param name="scopes">A space-separated list of scopes granted to the OAuth application.</param>
-		/// <returns></returns>
-		Task<TSession?> SignIn(SignInType type, string identifierOrToken, string? password = null, string? scopes = null);
+        /// <summary>
+        /// Log in an existing user, or login via a third-party provider.
+        /// </summary>
+        /// <param name="type">Type of Credentials being passed</param>
+        /// <param name="identifierOrToken">An email, phone, or RefreshToken</param>
+        /// <param name="password">Password to account (optional if `RefreshToken`)</param>
+        /// <param name="scopes">A space-separated list of scopes granted to the OAuth application.</param>
+        /// <param name="captchaToken"></param>
+        /// <returns></returns>
+        Task<TSession?> SignIn(SignInType type, string identifierOrToken, string? password = null, string? scopes = null, string? captchaToken = null);
 
 		/// <summary>
 		/// Sends a magic link login email to the specified email.

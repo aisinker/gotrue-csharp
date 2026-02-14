@@ -76,9 +76,14 @@ namespace Supabase.Gotrue
 				}
 
 				if (options.Data != null)
-				{
+                {
 					body.Add("data", options.Data);
 				}
+
+                if (options.CaptchaToken != null)
+                {
+                    body.Add("gotrue_meta_security", new Dictionary<string, object> { { "captcha_token", options.CaptchaToken }});
+                }
 			}
 
 			var response = await Helpers.MakeRequest(HttpMethod.Post, endpoint, body, Headers);
@@ -106,11 +111,16 @@ namespace Supabase.Gotrue
 		/// </summary>
 		/// <param name="email"></param>
 		/// <param name="password"></param>
+		/// <param name="captchaToken"></param>
 		/// <returns></returns>
-		public Task<Session?> SignInWithEmail(string email, string password)
+		public Task<Session?> SignInWithEmail(string email, string password, string? captchaToken = null)
 		{
 			var body = new Dictionary<string, object> { { "email", email }, { "password", password } };
-			return Helpers.MakeRequest<Session>(HttpMethod.Post, $"{Url}/token?grant_type=password", body, Headers);
+            if (!string.IsNullOrWhiteSpace(captchaToken))
+            {
+                body["gotrue_meta_security"] = new Dictionary<string, object> { { "captcha_token", captchaToken } };
+            }
+            return Helpers.MakeRequest<Session>(HttpMethod.Post, $"{Url}/token?grant_type=password", body, Headers);
 		}
 
 		/// <summary>

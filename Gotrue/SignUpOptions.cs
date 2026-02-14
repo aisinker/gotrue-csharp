@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 namespace Supabase.Gotrue
 {
     /// <summary>
@@ -6,6 +7,8 @@ namespace Supabase.Gotrue
     /// </summary>
     public class SignUpOptions : SignInOptions
     {
+        public string? CaptchaToken { get; set; }
+
         /// <summary>
         /// Optional user metadata.
         /// </summary>
